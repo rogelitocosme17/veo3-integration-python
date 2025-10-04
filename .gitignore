@@ -1,0 +1,92 @@
+# .gitignore for Delphi-Veo 3
+# Generated: tailored for a Python project that also stores media files
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+env/
+.venv/
+ENV/
+
+# Python build / distribution
+build/
+dist/
+*.egg-info/
+*.egg
+pip-wheel-metadata/
+wheelhouse/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage
+.pytest_cache/
+.cache
+.coverage
+coverage.xml
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Environment / secrets
+.env
+.env.*
+.env.local
+.envrc
+secrets.json
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and databases
+*.log
+*.sqlite3
+*.db
+*.pid
+
+# Media and large files (adjust if you do want to commit some media)
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.wav
+*.flac
+# Explicitly ignore the example dialogue file in this repo
+dialogue_example-0.mp4
+
+# Static build outputs / uploads (uncomment if you generate these)
+# staticfiles/
+# static_root/
+# uploads/
+# media/
+
+# Compiled C extensions
+*.so
+
+# Misc
+node_modules/
+
+# End of .gitignore
