@@ -1,5 +1,6 @@
 from google import genai
 import time
+from datetime import datetime
 from google.genai import types
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
@@ -56,13 +57,18 @@ def generate(req: PromptRequest):
             time.sleep(10)
             operation = client.operations.get(operation)
 
+        # Prepare unique filename with timestamp
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"generate_video_by_veo3_{timestamp}.mp4"
+        filepath = f"static/{filename}"
+
         # Download the generated video.
         generated_video = operation.response.generated_videos[0]
         client.files.download(file=generated_video.video)
-        generated_video.video.save("/static/dialogue_example.mp4")
+        generated_video.video.save(filepath)
 
         # Return URL for frontend
-        return {"video_url": f"http://127.0.0.1:9000/static/dialogue_example.mp4"}
+        return {"video_url": f"http://127.0.0.1:9000/static/{filename}"}
             
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
