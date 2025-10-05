@@ -49,7 +49,7 @@ def generate(req: PromptRequest):
     try:        
         operation = client.models.generate_videos(
             model="veo-3.0-generate-001",
-            prompt=prompt,
+            prompt=req.prompt,
         )
         
         # Poll the operation status until the video is ready.
@@ -64,9 +64,10 @@ def generate(req: PromptRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 # Check the status of video generation
-@app.get("/check/{operation_id}")
-def check_status(operation_id: str):    
+@app.get("/check/{operation_id_key}")
+def check_status(operation_id_key: str):    
     try:
+        operation_id = 'models/veo-3.0-generate-001/operations/' + operation_id_key
         operation_instance = GenerateVideosOperation(name=operation_id)
         operation = client.operations.get(operation_instance)
         if operation.done:
@@ -77,9 +78,10 @@ def check_status(operation_id: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/download/{operation_id}")
-def download_video(operation_id: str):
+@app.get("/download/{operation_id_key}")
+def download_video(operation_id_key: str):
     try:
+        operation_id = 'models/veo-3.0-generate-001/operations/' + operation_id_key
         operation_instance = GenerateVideosOperation(name=operation_id)
         operation = client.operations.get(operation_instance)
         if not operation.done:
