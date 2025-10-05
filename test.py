@@ -1,11 +1,17 @@
 from google import genai
 import time
 from google.genai import types
+from dotenv import load_dotenv
+import os
 
-client = genai.Client(api_key="...")
+# Load the .env file
+load_dotenv()
+google_api_key = os.getenv("GOOGLE_API_KEY")
 
-prompt = """A close up of two people staring at a cryptic drawing on a wall, torchlight flickering.
-A man murmurs, 'This must be it. That's the secret code.' The woman looks at him and whispering excitedly, 'What did you find?'"""
+# Initialize the GenAI client
+client = genai.Client(api_key=google_api_key)
+
+prompt = """A cute creature with snow leopard-like fur is walking in winter forest, 3D cartoon style render."""
 
 operation = client.models.generate_videos(
     model="veo-3.0-generate-001",
@@ -18,8 +24,21 @@ while not operation.done:
     time.sleep(10)
     operation = client.operations.get(operation)
 
+print("Operation", vars(operation))
+print("Operation Name", operation.name)
+print("Operation Done", operation.done)
+print("Operation Metadata", operation.metadata)
+
+operation_id = operation.response.generated_videos[0].video.uri
+print(f"Operation ID: {operation_id}")
+
+print("Video generation Result:", vars(operation.result))
+print("Video generation Response:", vars(operation.response))
+
 # Download the generated video.
 generated_video = operation.response.generated_videos[0]
+print("Generated Video", vars(generated_video))
+
 client.files.download(file=generated_video.video)
 generated_video.video.save("dialogue_example.mp4")
 print("Generated video saved to dialogue_example.mp4")
