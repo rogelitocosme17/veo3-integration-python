@@ -25,12 +25,12 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:3000",   # your Next.js frontend
-        "http://127.0.0.1:3000",   # sometimes the browser switches to 127.0.0.1
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
     ],
     allow_credentials=True,
-    allow_methods=["*"],          # allow all HTTP methods
-    allow_headers=["*"],          # allow all headers
+    allow_methods=["*"],          
+    allow_headers=["*"],          
 )
 
 # Serve static files
@@ -67,13 +67,17 @@ def generate(req: PromptRequest):
 @app.get("/check/{operation_id_key}")
 def check_status(operation_id_key: str):    
     try:
+        # Get the full operation ID
         operation_id = 'models/veo-3.0-generate-001/operations/' + operation_id_key
+        # Get the operation instance
         operation_instance = GenerateVideosOperation(name=operation_id)
+        # Get the operation from the instance
         operation = client.operations.get(operation_instance)
+
         if operation.done:
             return {"status": "done"}
         else:
-            return {"status": "in_progress"}
+            return {"status": "in progress"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -81,9 +85,13 @@ def check_status(operation_id_key: str):
 @app.get("/download/{operation_id_key}")
 def download_video(operation_id_key: str):
     try:
+        # Get the full operation ID
         operation_id = 'models/veo-3.0-generate-001/operations/' + operation_id_key
+        # Get the operation instance
         operation_instance = GenerateVideosOperation(name=operation_id)
+        # Get the operation from the instance
         operation = client.operations.get(operation_instance)
+
         if not operation.done:
             raise HTTPException(status_code=400, detail="Operation is still in progress.")
         
