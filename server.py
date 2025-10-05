@@ -57,6 +57,44 @@ def generate(req: PromptRequest):
             time.sleep(10)
             operation = client.operations.get(operation)
 
+        return {"operation_id": operation.name}
+    
+        # # Prepare unique filename with timestamp
+        # timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        # filename = f"generate_video_by_veo3_{timestamp}.mp4"
+        # filepath = f"static/{filename}"
+
+        # # Download the generated video.
+        # generated_video = operation.response.generated_videos[0]
+        # client.files.download(file=generated_video.video)
+        # generated_video.video.save(filepath)
+
+        # # Return URL for frontend
+        # return {"video_url": f"http://127.0.0.1:9000/static/{filename}"}
+            
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Check the status of video generation
+@app.get("/check/{operation_id}")
+def check_status(operation_id: str):
+    try:
+        operation = client.operations.get(operation_id)
+        if operation.done:
+            return {"status": "done"}
+        else:
+            return {"status": "in_progress"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/download/{operation_id}")
+def download_video(operation_id: str):
+    try:
+        operation = client.operations.get(operation_id)
+        if not operation.done:
+            raise HTTPException(status_code=400, detail="Operation is still in progress.")
+        
         # Prepare unique filename with timestamp
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"generate_video_by_veo3_{timestamp}.mp4"
@@ -69,11 +107,6 @@ def generate(req: PromptRequest):
 
         # Return URL for frontend
         return {"video_url": f"http://127.0.0.1:9000/static/{filename}"}
-            
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-
-
-
-
